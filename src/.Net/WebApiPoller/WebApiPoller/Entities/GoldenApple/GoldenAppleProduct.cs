@@ -32,7 +32,11 @@
                 LocalId = Id,
                 ImageUrl = ImageUrl,
                 Price = Price,
-                Name = Name
+                Category = CategoryType,
+                Name = Name,
+                Source = Source.GoldenApple,
+                Url = Url,     
+                Brand = Brand
             };
 
             return product;

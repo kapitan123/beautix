@@ -23,15 +23,15 @@ namespace WebApiPoller.Services.Poller
 
         public async Task Run()
         {
-            var letuProductsResponse = await _httpClient.GetAsync(_url);
+            var gaProductsResponse = await _httpClient.GetAsync(_url);
 
-            var letuProductString = await letuProductsResponse.Content.ReadAsStringAsync();
+            var gaProductString = await gaProductsResponse.Content.ReadAsStringAsync();
 
             JsonSerializerOptions options = new();
             options.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
             options.PropertyNameCaseInsensitive = true;
 
-            var gaProducts = JsonSerializer.Deserialize<GoldenAppleResponse>(letuProductString, options);
+            var gaProducts = JsonSerializer.Deserialize<GoldenAppleResponse>(gaProductString, options);
 
             var products = gaProducts.Products.Select(p => p.MapToProduct());
 

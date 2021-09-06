@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,16 +24,24 @@ namespace WebApiPoller.Services.Poller
 
         public async Task Run()
         {
-            var gaProductsResponse = await _httpClient.GetAsync(_url);
+            var letuProductsResponse = await _httpClient.GetAsync(_url);
 
 
-            var gaProductString = await gaProductsResponse.Content.ReadAsStringAsync();
+            var letuProductString = await letuProductsResponse.Content.ReadAsStringAsync();
 
             JsonSerializerOptions options = new();
-            options.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
             options.PropertyNameCaseInsensitive = true;
 
-            var letuProducts = JsonSerializer.Deserialize<LetuResponse>(gaProductString, options);
+            try
+            {
+                var letuProducts = JsonSerializer.Deserialize<LetuResponse>(letuProductString, options);
+
+                var test = letuProducts.Contents;
+            }
+            catch (Exception e)
+            {
+                var test = e;
+            }
 
             //var products = gaProducts.Products.Select(p => p.MapToProduct());
 

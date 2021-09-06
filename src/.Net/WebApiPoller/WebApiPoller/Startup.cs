@@ -45,7 +45,8 @@ namespace WebApiPoller
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
                 });
 
-            services.AddScoped<IPoller, GoldenApplePoller>();
+            //services.AddScoped<IPoller, GoldenApplePoller>();
+            services.AddScoped<IPoller, LetuPoller>();
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
         }
