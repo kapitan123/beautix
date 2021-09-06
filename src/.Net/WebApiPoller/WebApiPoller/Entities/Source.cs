@@ -8,6 +8,7 @@ namespace WebApiPoller.Entities
     public enum Source
     {
         GoldenApple,
-        Letu
+        Letu,
+        Podrygka
     }
 }

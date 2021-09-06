@@ -36,16 +36,16 @@ namespace WebApiPoller.Services.Poller
             {
                 var letuProducts = JsonSerializer.Deserialize<LetuResponse>(letuProductString, options);
 
-                var test = letuProducts.Contents;
+                var products = letuProducts.Contents.First().MainContent.First(mc => mc.Records != null)
+                    .Records.Select(r => r.Attributes.ToPropduct());
+
+                await _productsRepos.CreateManyProducts(products);
             }
             catch (Exception e)
             {
                 var test = e;
             }
 
-            //var products = gaProducts.Products.Select(p => p.MapToProduct());
-
-            //await _productsRepos.CreateManyProducts(products);
         }
     }
 }

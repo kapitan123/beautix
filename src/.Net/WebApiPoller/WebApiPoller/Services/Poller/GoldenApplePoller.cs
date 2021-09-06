@@ -33,7 +33,7 @@ namespace WebApiPoller.Services.Poller
 
             var gaProducts = JsonSerializer.Deserialize<GoldenAppleResponse>(gaProductString, options);
 
-            var products = gaProducts.Products.Select(p => p.MapToProduct());
+            var products = gaProducts.Products.Select(p => p.ToProduct());
 
             await _productsRepos.CreateManyProducts(products);
         }

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace WebApiPoller.Entities.Letu
 {
@@ -39,7 +36,7 @@ namespace WebApiPoller.Entities.Letu
 
         public string Id => Ids.First();
 
-        public string Url => Urls.First() + Ids.First();
+        public string Url => $"{Urls.First()}/{Ids.First()}";
 
         public Product ToPropduct()
         {
@@ -50,7 +47,7 @@ namespace WebApiPoller.Entities.Letu
                 Price = Price,
                 Category = Category,
                 Name = Name,
-                Source = Source.GoldenApple,
+                Source = Source.Letu,
                 Url = Url,
                 Brand = Brand
             };

@@ -25,7 +25,7 @@
 
         }
 
-        public Product MapToProduct()
+        public Product ToProduct()
         {
             var product = new Product
             {
