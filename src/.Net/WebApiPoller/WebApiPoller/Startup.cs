@@ -11,6 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiPoller.Data;
+using WebApiPoller.Data.Interfaces;
+using WebApiPoller.Extensions;
+using WebApiPoller.Repositories;
+using WebApiPoller.Repositories.Interfaces;
+using WebApiPoller.Services;
+using WebApiPoller.Services.Poller;
 
 namespace WebApiPoller
 {
@@ -26,12 +33,21 @@ namespace WebApiPoller
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddControllers();
+                //.AddJsonOptions(options =>
+                //{
+                //    options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+                //});
 
-            services.AddControllers();
             services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
-            });
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
+                });
+
+            services.AddScoped<IPoller, GoldenApplePoller>();
+            services.AddScoped<ICatalogContext, CatalogContext>();
+            services.AddScoped<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
