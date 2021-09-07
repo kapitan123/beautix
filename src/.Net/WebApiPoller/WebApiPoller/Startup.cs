@@ -46,7 +46,8 @@ namespace WebApiPoller
                 });
 
             //services.AddScoped<IPoller, GoldenApplePoller>();
-            services.AddScoped<IPoller, LetuPoller>();
+            //services.AddScoped<IPoller, LetuPoller>();
+            services.AddScoped<IPoller, PodrygkaPoller>();           
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
         }
