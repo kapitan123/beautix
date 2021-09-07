@@ -2,12 +2,8 @@
 using System;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml;
 using WebApiPoller.Entities;
-using WebApiPoller.Entities.GoldenApple;
-using WebApiPoller.Extensions;
 using WebApiPoller.Repositories.Interfaces;
 
 namespace WebApiPoller.Services.Poller
@@ -44,7 +40,7 @@ namespace WebApiPoller.Services.Poller
             }
         }
 
-        private Product HtmlToProduct(HtmlNode node)
+        private static Product HtmlToProduct(HtmlNode node)
         {
             var id = node.GetAttributeValue("id", "");
 

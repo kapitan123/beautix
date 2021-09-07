@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WebApiPoller.Entities.GoldenApple;
-using WebApiPoller.Extensions;
 using WebApiPoller.Repositories.Interfaces;
 
 namespace WebApiPoller.Services.Poller

@@ -12,8 +12,8 @@ namespace WebApiPoller.Services.Poller
     {
         private readonly string _url = $"https://goldapple.ru/web_scripts/discover/category/products?cat=7&page=1";
 
-        private IProductRepository _productsRepos;
-        private HttpClient _httpClient;
+        private readonly IProductRepository _productsRepos;
+        private readonly HttpClient _httpClient;
 
         public GoldenApplePoller(IProductRepository productsRepos)
         {
