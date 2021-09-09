@@ -45,6 +45,7 @@ namespace WebApiPoller
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
+                    // c.DescribeAllEnumsAsStrings();
                 });
 
             services.Configure<RouteOptions>(options =>

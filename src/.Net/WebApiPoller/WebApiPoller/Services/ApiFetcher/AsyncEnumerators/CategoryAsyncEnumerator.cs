@@ -30,7 +30,7 @@ namespace WebApiPoller.Services.ApiFetcher.AsyncEnumerators
             var nextPage = CurrentPage + 1;
             var result = await _gaClient.FetchFromCategoryPage(_category, nextPage);
 
-            if (result.Any())
+            if (!result.Any())
             {
                 return false;
             }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebApiPoller.Entities;
+using WebApiPoller.Services.ApiFetcher.AsyncEnumerators;
 using WebApiPoller.Services.Clients;
 
 namespace WebApiPoller.Services.ApiFetcher
@@ -17,7 +18,7 @@ namespace WebApiPoller.Services.ApiFetcher
 
         public IAsyncEnumerable<IEnumerable<Product>> ByCategory(Source source, Category category)
         {
-            return new CategoryEnumerator(_clientsMap[source], category);
+            return new CategoryAsyncEnumerator(_clientsMap[source], category);
         }
     }
 }
