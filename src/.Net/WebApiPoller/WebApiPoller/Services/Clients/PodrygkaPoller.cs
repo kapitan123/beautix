@@ -8,7 +8,7 @@ using WebApiPoller.Repositories.Interfaces;
 
 namespace WebApiPoller.Services.Poller
 {
-    public class PodrygkaPoller : IPoller
+    public class PodrygkaPoller  
     {
         private readonly string _url = $"https://www.podrygka.ru/catalog/parfyumeriya/";
 

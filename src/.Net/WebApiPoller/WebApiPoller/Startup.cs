@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,7 +17,10 @@ using WebApiPoller.Data.Interfaces;
 using WebApiPoller.Extensions;
 using WebApiPoller.Repositories;
 using WebApiPoller.Repositories.Interfaces;
+using WebApiPoller.Routing;
 using WebApiPoller.Services;
+using WebApiPoller.Services.ApiFetcher;
+using WebApiPoller.Services.Clients;
 using WebApiPoller.Services.Poller;
 
 namespace WebApiPoller
@@ -35,19 +39,27 @@ namespace WebApiPoller
         {
             services
                 .AddControllers();
-                //.AddJsonOptions(options =>
-                //{
-                //    options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
-                //});
-
-            services.AddSwaggerGen(c =>
+            services
+                .AddHttpClient();
+            services
+                .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
                 });
 
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("categoryEnum", typeof(CategoryConstraint));
+            });
+
             //services.AddScoped<IPoller, GoldenApplePoller>();
             //services.AddScoped<IPoller, LetuPoller>();
-            services.AddScoped<IPoller, PodrygkaPoller>();           
+            // services.AddHttpClient<GoldenAppleClient>();
+
+            // check if this can be anyhow resolved
+            services.AddHttpClient<IProductsSourceClient, GoldenAppleClient>();
+
+            services.AddScoped<IProductApiFetcher, ProductApiFetcher>();
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
         }

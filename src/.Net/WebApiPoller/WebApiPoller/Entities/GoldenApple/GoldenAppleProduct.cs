@@ -24,22 +24,5 @@
         {
 
         }
-
-        public Product ToProduct()
-        {
-            var product = new Product
-            {
-                LocalId = Id,
-                ImageUrl = ImageUrl,
-                Price = Price,
-                Category = CategoryType,
-                Name = Name,
-                Source = Source.GoldenApple,
-                Url = Url,     
-                Brand = Brand
-            };
-
-            return product;
-        }
     }
 }

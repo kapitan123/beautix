@@ -8,7 +8,7 @@ using WebApiPoller.Repositories.Interfaces;
 
 namespace WebApiPoller.Services.Poller
 {
-    public class LetuPoller: IPoller
+    public class LetuPoller 
     {
         private readonly string _url = $"https://www.letu.ru/storeru/browse/parfyumeriya?pushSite=storeMobileRU&format=json&pushSite=storeMobileRU&_dynSessConf=6023308454904025890";
 

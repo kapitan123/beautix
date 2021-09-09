@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using WebApiPoller.Services;
+using WebApiPoller.Services.ApiFetcher;
 using WebApiPoller.Services.Poller;
 
 namespace WebApiPoller.Controllers
@@ -12,16 +13,17 @@ namespace WebApiPoller.Controllers
     {
         private readonly ILogger<PollerController> _logger;
 
-        private readonly IPoller _poller;
+        private readonly IProductApiFetcher _fetcher;
 
-        public PollerController(ILogger<PollerController> logger, IPoller poller)
+        public PollerController(ILogger<PollerController> logger, IProductApiFetcher fetcher)
         {
             _logger = logger;
-            _poller = poller;
+            _fetcher = fetcher;
         }
 
         [HttpGet]
-        public async Task Run()
+        [Route("products/{category:categoryEnum}")]
+        public async Task GetByCategory()
         {
             // AK TODO pass an enumerable what service to poll
             await _poller.Run();
