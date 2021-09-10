@@ -1,28 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using WebApiPoller.Data;
 using WebApiPoller.Data.Interfaces;
-using WebApiPoller.Extensions;
 using WebApiPoller.Repositories;
 using WebApiPoller.Repositories.Interfaces;
 using WebApiPoller.Routing;
-using WebApiPoller.Services;
 using WebApiPoller.Services.ApiFetcher;
 using WebApiPoller.Services.Clients;
-using WebApiPoller.Services.Poller;
 
 namespace WebApiPoller
 {
@@ -48,12 +38,10 @@ namespace WebApiPoller
             services
                 .AddHttpClient();
 
-
             services
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
-                    // c.DescribeAllEnumsAsStrings();
                 });
 
             services.Configure<RouteOptions>(options =>
@@ -61,14 +49,10 @@ namespace WebApiPoller
                 options.ConstraintMap.Add("categoryEnum", typeof(CategoryConstraint));
             });
 
-            //services.AddScoped<IPoller, GoldenApplePoller>();
-            //services.AddScoped<IPoller, LetuPoller>();
-            // services.AddHttpClient<GoldenAppleClient>();
-
-            // check if this can be anyhow resolved
             services.AddHttpClient<IProductsSourceClient, GoldenAppleClient>();
             services.AddHttpClient<IProductsSourceClient, LetuClient>();
-
+            services.AddHttpClient<IProductsSourceClient, PodrygkaClient>();
+            
             services.AddScoped<IProductApiFetcher, ProductApiFetcher>();
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();

@@ -5,13 +5,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WebApiPoller.Entities;
-using WebApiPoller.Entities.GoldenApple;
 using WebApiPoller.Entities.Letu;
 
 namespace WebApiPoller.Services.Clients
 {
     public class LetuClient : IProductsSourceClient
     {
+        // AK settings can be extracted to a config object
         private readonly Dictionary<Category, string> categoryMapping = new()
         {
             [Category.Parfume] = "parfyumeriya"
@@ -21,12 +21,18 @@ namespace WebApiPoller.Services.Clients
 
         private readonly HttpClient _httpClient;
 
+        private readonly JsonSerializerOptions _options;
+
         public Source Source => Source.Letu;
 
         public LetuClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_baseUrl);
+            _options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
         }
 
         public async Task<IEnumerable<Product>> FetchFromCategoryPage(Category category, int pageNumber)
@@ -37,10 +43,6 @@ namespace WebApiPoller.Services.Clients
 
             var letuProductString = await letuProductsResponse.Content.ReadAsStringAsync();
 
-            var _options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true
-            };
             var letuProducts = JsonSerializer.Deserialize<LetuResponse>(letuProductString, _options);
 
             var products = letuProducts.Contents.First().MainContent.First(mc => mc.Records != null)

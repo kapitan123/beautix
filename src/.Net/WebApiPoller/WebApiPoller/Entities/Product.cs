@@ -13,6 +13,7 @@ namespace WebApiPoller.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public Source Source { get; set; }
 
         public string LocalId { get; set; }
