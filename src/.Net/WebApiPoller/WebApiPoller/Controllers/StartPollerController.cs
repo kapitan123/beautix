@@ -28,16 +28,13 @@ namespace WebApiPoller.Controllers
         // AK TODO add a response, to show how many and which products where imported
         // As it can take some time I can add here a websocket to see results in realtime
         [HttpGet]
-        [Route("products/{category:categoryEnum}")]
-        public async Task GetByCategory(Category cat)
+        [Route("products/{source}/{category:categoryEnum}")]
+        public async Task GetByCategory(Source source, Category category)
         {
             try
             {
-                // AK TODO add source
-                var source = Source.GoldenApple;
-
                 // AK TODO pass an enumerable what service to poll
-                await foreach (var products in _fetcher.ByCategory(source, cat))
+                await foreach (var products in _fetcher.ByCategory(source, category))
                 {
                     await _repo.CreateManyProducts(products);
                 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiPoller.Entities.Letu;
 
-namespace WebApiPoller.Entities.GoldenApple
+namespace WebApiPoller.Entities.Letu
 {
     public class LetuResponse
     {

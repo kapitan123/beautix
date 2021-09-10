@@ -14,21 +14,21 @@ namespace WebApiPoller.Services.ApiFetcher.AsyncEnumerators
 
         public IEnumerable<Product> Current { get; private set; }
 
-        private readonly IProductsSourceClient _gaClient;
+        private readonly IProductsSourceClient _client;
 
         private readonly Category _category;
 
         public CategoryAsyncEnumerator(IProductsSourceClient gaClient, Category category)
         {
             CurrentPage = 0;
-            _gaClient = gaClient;
+            _client = gaClient;
             _category = category;
         }
 
         public async ValueTask<bool> MoveNextAsync()
         {
             var nextPage = CurrentPage + 1;
-            var result = await _gaClient.FetchFromCategoryPage(_category, nextPage);
+            var result = await _client.FetchFromCategoryPage(_category, nextPage);
 
             if (!result.Any())
             {

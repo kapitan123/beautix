@@ -21,6 +21,7 @@ namespace WebApiPoller.Services.Clients
 
         private readonly HttpClient _httpClient;
 
+
         private readonly JsonSerializerOptions _options;
 
         public Source Source => Source.GoldenApple;

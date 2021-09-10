@@ -37,22 +37,5 @@ namespace WebApiPoller.Entities.Letu
         public string Id => Ids.First();
 
         public string Url => $"{Urls.First()}/{Ids.First()}";
-
-        public Product ToPropduct()
-        {
-            var product = new Product
-            {
-                LocalId = Id,
-                ImageUrl = ImageUrl,
-                Price = Price,
-                Category = Category,
-                Name = Name,
-                Source = Source.Letu,
-                Url = Url,
-                Brand = Brand
-            };
-
-            return product;
-        }
     }
 }

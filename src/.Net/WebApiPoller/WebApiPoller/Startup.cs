@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebApiPoller.Data;
 using WebApiPoller.Data.Interfaces;
@@ -38,9 +39,16 @@ namespace WebApiPoller
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddControllers();
+                .AddControllers()
+                .AddJsonOptions(j =>
+                {
+                    j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    j.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                });
             services
                 .AddHttpClient();
+
+
             services
                 .AddSwaggerGen(c =>
                 {
@@ -59,6 +67,7 @@ namespace WebApiPoller
 
             // check if this can be anyhow resolved
             services.AddHttpClient<IProductsSourceClient, GoldenAppleClient>();
+            services.AddHttpClient<IProductsSourceClient, LetuClient>();
 
             services.AddScoped<IProductApiFetcher, ProductApiFetcher>();
             services.AddScoped<ICatalogContext, CatalogContext>();
