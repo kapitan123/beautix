@@ -19,12 +19,8 @@ namespace WebApiPoller.Controllers
         private readonly IProductRepository _repo;
 
         public StartPollerController(ILogger<StartPollerController> logger, IProductApiFetcher fetcher, IProductRepository repo)
-        {
-            _logger = logger;
-            _fetcher = fetcher;
-            _repo = repo;
-        }
-
+            => (_fetcher, _logger, _repo) = (fetcher, logger, repo)
+        
         // AK TODO add a response, to show how many and which products where imported
         // As it can take some time I can add here a websocket to see results in realtime
         // AK TODO swagger documentation on responses

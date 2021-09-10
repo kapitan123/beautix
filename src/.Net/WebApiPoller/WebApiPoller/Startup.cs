@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using System.Text.Json.Serialization;
 using WebApiPoller.Data;
 using WebApiPoller.Data.Interfaces;
@@ -48,6 +49,10 @@ namespace WebApiPoller
             {
                 options.ConstraintMap.Add("categoryEnum", typeof(CategoryConstraint));
             });
+
+            var mongoConnectionString = Configuration.GetValue<string>("DatabaseSettings:ConnectionString");
+            services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
+            services.AddHostedService<ConfigureMongoDbIndexesService>();
 
             services.AddHttpClient<IProductsSourceClient, GoldenAppleClient>();
             services.AddHttpClient<IProductsSourceClient, LetuClient>();
