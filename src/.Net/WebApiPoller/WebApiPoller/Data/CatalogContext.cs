@@ -2,15 +2,16 @@
 using MongoDB.Driver;
 using WebApiPoller.Data.Interfaces;
 using WebApiPoller.Entities;
+using WebApiPoller.Infrastructure.ConfigObjects;
 
 namespace WebApiPoller.Data
 {
     public class CatalogContext: ICatalogContext
     {
-        public CatalogContext(IConfiguration configuration, IMongoClient client)
+        public CatalogContext(DatabaseConfig configuration, IMongoClient client)
         {
-            var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
-            Products = database.GetCollection<Product>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
+            var database = client.GetDatabase(configuration.DatabaseName);
+            Products = database.GetCollection<Product>(configuration.CollectionName);
         }
 
         public IMongoCollection<Product> Products { get; }

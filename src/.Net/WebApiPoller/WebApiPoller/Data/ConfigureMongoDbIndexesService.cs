@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPoller.Entities;
+using WebApiPoller.Infrastructure.ConfigObjects;
 
 namespace WebApiPoller.Data
 {
@@ -15,15 +16,16 @@ namespace WebApiPoller.Data
     {
         private readonly IMongoClient _client;
         private readonly ILogger<ConfigureMongoDbIndexesService> _logger;
-        private readonly IConfiguration _configuration;
+        private readonly DatabaseConfig _configuration;
+
         public ConfigureMongoDbIndexesService(IMongoClient client, 
-            ILogger<ConfigureMongoDbIndexesService> logger, IConfiguration configuration)
+            ILogger<ConfigureMongoDbIndexesService> logger, DatabaseConfig configuration)
             => (_client, _logger, _configuration) = (client, logger, configuration);
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var database = _client.GetDatabase(_configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
-            var collection = database.GetCollection<Product>(_configuration.GetValue<string>("DatabaseSettings:CollectionName"));
+            var database = _client.GetDatabase(_configuration.DatabaseName);
+            var collection = database.GetCollection<Product>(_configuration.CollectionName);
 
             _logger.LogInformation("Creating Source + LocalId Index on Products");
 

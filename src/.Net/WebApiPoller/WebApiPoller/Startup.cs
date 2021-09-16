@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -6,14 +7,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using WebApiPoller.Data;
 using WebApiPoller.Data.Interfaces;
+using WebApiPoller.Infrastructure.ConfigObjects;
+using WebApiPoller.Infrastructure.Routing;
 using WebApiPoller.Repositories;
 using WebApiPoller.Repositories.Interfaces;
-using WebApiPoller.Routing;
 using WebApiPoller.Services.ApiFetcher;
 using WebApiPoller.Services.Clients;
+using WebApiPoller.Services.Messaging;
 
 namespace WebApiPoller
 {
@@ -36,8 +40,13 @@ namespace WebApiPoller
                     j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     j.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 });
+
             services
-                .AddHttpClient();
+                .AddHttpClient()
+                .Configure<RouteOptions>(options =>
+                {
+                    options.ConstraintMap.Add("categoryEnum", typeof(CategoryConstraint));
+                });
 
             services
                 .AddSwaggerGen(c =>
@@ -45,22 +54,35 @@ namespace WebApiPoller
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPoller", Version = "v1" });
                 });
 
-            services.Configure<RouteOptions>(options =>
-            {
-                options.ConstraintMap.Add("categoryEnum", typeof(CategoryConstraint));
-            });
+            var (databaseConfig, messageProducerConfig) = RegisterConfigs(services);
 
-            var mongoConnectionString = Configuration.GetValue<string>("DatabaseSettings:ConnectionString");
-            services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
+            services.AddSingleton<IMongoClient>(new MongoClient(databaseConfig.ConnectionString));
             services.AddHostedService<ConfigureMongoDbIndexesService>();
 
+            var producerBuilder = new ProducerBuilder<Null, List<string>>(messageProducerConfig);
+            services.AddSingleton(producerBuilder.Build());
+
+            services.AddSingleton<IMessageProducer, MessageProducer>();
             services.AddHttpClient<IProductsSourceClient, GoldenAppleClient>();
             services.AddHttpClient<IProductsSourceClient, LetuClient>();
             services.AddHttpClient<IProductsSourceClient, PodrygkaClient>();
-            
+
             services.AddScoped<IProductApiFetcher, ProductApiFetcher>();
             services.AddScoped<ICatalogContext, CatalogContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
+        }
+
+        private (DatabaseConfig, ProducerConfig) RegisterConfigs(IServiceCollection services)
+        {
+            var messageProducerConfig = new ProducerConfig();
+            var databaseConfig = new DatabaseConfig();
+            Configuration.Bind("MessageProducer", messageProducerConfig);
+            Configuration.Bind("DatabaseSettings", databaseConfig);
+
+            services.AddSingleton(messageProducerConfig);
+            services.AddSingleton(databaseConfig);
+
+            return (databaseConfig, messageProducerConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

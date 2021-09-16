@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using WebApiPoller.Entities;
 using WebApiPoller.Entities.GoldenApple;
-using WebApiPoller.Extensions;
+using WebApiPoller.Infrastructure.JsonSerialization;
 
 namespace WebApiPoller.Services.Clients
 {
