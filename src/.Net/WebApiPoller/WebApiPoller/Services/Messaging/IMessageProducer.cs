@@ -5,6 +5,6 @@ namespace WebApiPoller.Services.Messaging
 {
     public interface IMessageProducer
     {
-        Task NotifyOnProductsUpsert(List<string> productIds);
+        Task NotifyOnProductsUpsert(IEnumerable<string> productIds);
     }
 }

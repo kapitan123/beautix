@@ -43,8 +43,8 @@ namespace WebApiPoller.Controllers
             {
                 await foreach (var products in _fetcher.ByCategory(source, category))
                 {
-                    await _repo.CreateManyProducts(products);
-                    _producer
+                    var createdProductIds = await _repo.CreateMany(products);
+                    await _producer.NotifyOnProductsUpsert(createdProductIds);
                 }
             }
             catch(Exception e)

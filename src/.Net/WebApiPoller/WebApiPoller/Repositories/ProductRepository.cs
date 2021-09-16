@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApiPoller.Data.Interfaces;
 using WebApiPoller.Entities;
@@ -25,7 +26,7 @@ namespace WebApiPoller.Repositories
                             .ToListAsync();
         }
 
-        public async Task<Product> GetProduct(string id)
+        public async Task<Product> Get(string id)
         {
             return await _context
                            .Products
@@ -33,7 +34,7 @@ namespace WebApiPoller.Repositories
                            .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductByName(string name)
+        public async Task<IEnumerable<Product>> GetByName(string name)
         {
             var filter = Builders<Product>.Filter.ElemMatch(p => p.Name, name);
 
@@ -43,7 +44,7 @@ namespace WebApiPoller.Repositories
                             .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
+        public async Task<IEnumerable<Product>> GetByCategory(string categoryName)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.Category, categoryName);
 
@@ -54,17 +55,26 @@ namespace WebApiPoller.Repositories
         }
 
 
-        public async Task CreateProduct(Product product)
+        public async Task Create(Product product)
         {
             await _context.Products.InsertOneAsync(product);
         }
 
-        public async Task CreateManyProducts(IEnumerable<Product> products)
+        public async Task<IEnumerable<string>> CreateMany(IEnumerable<Product> products)
         {
             await _context.Products.InsertManyAsync(products);
+
+            var createdIds = products.Select(p => p.Id);
+
+            return createdIds;
         }
 
-        public async Task<bool> UpdateProduct(Product product)
+        public async Task UpsertMany(Product product)
+        {
+            await _context.Products.InsertOneAsync(product);
+        }
+
+        public async Task<bool> Update(Product product)
         {
             var updateResult = await _context
                                         .Products
@@ -74,7 +84,7 @@ namespace WebApiPoller.Repositories
                     && updateResult.ModifiedCount > 0;
         }
 
-        public async Task<bool> DeleteProduct(string id)
+        public async Task<bool> Delete(string id)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
 
